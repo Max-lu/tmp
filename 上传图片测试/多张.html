@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="jquery-1.11.1.min.js"></script>
+
+    <style>
+
+        .upload {
+            position: relative;
+            height: 40px;
+            width: 80px;
+            text-align: center;
+            line-height: 40px;
+            background-color: #f39801;
+            color: #fff;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .button {
+            position: absolute;
+            opacity: 0;
+            height: 40px;
+            width: 80px;
+            left: 0;
+            top: 0;
+            cursor: pointer;
+        }
+
+        .desc {
+            position: absolute;
+            left: 85px;
+            top: 0;
+            width: 400px;
+            color: #555;
+        }
+
+        .img {
+            margin-top: 100px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="upload">
+            上传图片
+            <input type="file" onchange="preview(this)" id="file" class="button" multiple/>
+            <span class="desc">上传最大的文件为1M，格式为JPG、JPEG、GIF、PNG</span>
+        </div>
+        <div id="display_div">
+
+        </div>
+    </div>
+</body>
+<script>
+
+    function preview(fileInput) {
+
+        var files = fileInput.files;
+
+        if (files) {
+            var suffixArray = ['.jpg', '.gif', '.png', '.jpeg'];
+
+            for (var i in files) {
+                var reader = new FileReader();
+                var file = files[i];
+
+                var fileName = file.name;
+
+                var suffix = fileName.substr(fileName.lastIndexOf(".")).toLowerCase();
+
+                var fileSize = (file.size / 1024 / 1024).toFixed(2); //文件大小 MB
+
+                if (suffixArray.indexOf(suffix) >= 0 && fileSize <= 1) {
+                    reader.onload = function (evt) {
+                        $("#display_div").append("<img id='img' src='" + evt.target.result + "' alt='图片不见啦' class='img' width='100' height='100' />");
+                    }
+                } else {
+                    alert("文件类型不正确或文件超出了大小限制，只允许上传JPG、JPEG、GIF、PNG文件格式，大小最大为1M。请重新上传！！");
+                }
+
+                reader.readAsDataURL(file);
+                console.log("上传图片:" + fileName);
+            }
+        }
+    }
+</script>
+</html>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 采用注释的方式配置bean -->
+    <context:annotation-config/>
+
+    <mvc:annotation-driven />
+
+    <!-- 配置要扫描的包 -->
+    <context:component-scan base-package="cn.maxlu.demo.spring.mvc"/>
+
+    <!-- 视图位置配置 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="order" value="2"/>
+    </bean>
+
+    <!--基于properties文件的视图解析-->
+    <!--<bean class="org.springframework.web.servlet.view.ResourceBundleViewResolver">-->
+        <!--<property name="basename" value="spring/spring-views"/>-->
+    <!--</bean>-->
+
+    <!-- json返回处理 -->
+    <bean id="mappingJacksonHttpMessageConverter"
+          class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="mappingJacksonHttpMessageConverter"/>
+            </list>
+        </property>
+    </bean>
+
+    <!--拦截器处理-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/exclude"/>
+            <bean id="demoInterceptor" class="cn.maxlu.demo.spring.mvc.interceptor.DemoInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!--使用CGLIB进行动态代理-->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+</beans>  

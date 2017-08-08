@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.maxlu.demo.spring.mybatis.IDemoDao" >
+
+	<resultMap id="demoInfo" type="cn.maxlu.demo.spring.mybatis.DemoInfo" >
+    	<id column="id" property="id" jdbcType="INTEGER" />
+    	<result column="name" property="name" jdbcType="VARCHAR" />
+  	</resultMap>
+  	
+  	<select id="selectDemo" parameterType="Integer" resultMap="demoInfo">
+  		SELECT 
+  			id, name
+  		FROM 
+  			demo 
+  		WHERE 
+  			id=#{id}
+  	</select>
+
+    <select id="selectByName" parameterType="String" resultMap="demoInfo">
+        SELECT
+          id, name
+        FROM
+          demo
+        WHERE
+          name=#{name}
+    </select>
+
+    <insert id="insertDemo" parameterType="cn.maxlu.demo.spring.mybatis.DemoInfo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO demo(id, name) VALUES (#{id}, #{name})
+    </insert>
+  	
+</mapper>

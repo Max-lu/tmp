@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <properties resource="jdbc.properties">
+        <property name="demoName" value="demoValue"/>
+
+        <!-- 开启默认值功能 from mybatis 3.4.2 -->
+        <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/>
+    </properties>
+
+    <settings>
+        <setting name="useGeneratedKeys" value="true"/>
+    </settings>
+    
+    <typeAliases>
+        <typeAlias type="cn.maxlu.demo.mybatis.domain.Demo" alias="Demo"/>
+        <!--mybatis会在这个包下搜索需要的bean-->
+        <package name="cn.maxlu.demo.mybatis.domain"/>
+    </typeAliases>
+
+    <typeHandlers>
+        <typeHandler handler="cn.maxlu.demo.mybatis.typehandler.DemoTypeHandler"/>
+        <!--mybatis会在这个包下搜索需要的handler-->
+        <package name="cn.maxlu.demo.mybatis.typehandler"/>
+    </typeHandlers>
+
+    <objectFactory type="cn.maxlu.demo.mybatis.DemoObjectFactory">
+        <property name="someProperty" value="someValue"/>
+    </objectFactory>
+    
+    <plugins>
+        <plugin interceptor="cn.maxlu.demo.mybatis.interceptor.DemoPlugin">
+            <property name="someProperty" value="someValue"/>
+        </plugin>
+    </plugins>
+    
+    <environments default="development">
+        <environment id="development">
+            <!--org.apache.ibatis.transaction.TransactionFactory-->
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <!--默认值com.mysql.cj.jdbc.Driver-->
+                <property name="driver" value="${driver:com.mysql.cj.jdbc.Driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    
+    <mappers>
+        <mapper resource="mapper/DemoMapper.xml"/>
+
+        <!--Register all interfaces in a package as mappers-->
+        <package name=""/>
+    </mappers>
+</configuration>
